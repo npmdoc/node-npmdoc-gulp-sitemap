@@ -1,0 +1,297 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/pgilad/gulp-sitemap#readme"
+
+    >gulp-sitemap (v4.2.0)</a>
+</h1>
+<h4>Generate a search engine friendly sitemap.xml using a Gulp stream</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-sitemap">module gulp-sitemap</a><ol>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gulp-sitemap.</span>sitemap</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-sitemap.sitemap">module gulp-sitemap.sitemap</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sitemap.sitemap.getEntryConfig">
+            function <span class="apidocSignatureSpan">gulp-sitemap.sitemap.</span>getEntryConfig
+            <span class="apidocSignatureSpan">(file, siteConfig)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sitemap.sitemap.isChangefreqValid">
+            function <span class="apidocSignatureSpan">gulp-sitemap.sitemap.</span>isChangefreqValid
+            <span class="apidocSignatureSpan">(changefreq)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sitemap.sitemap.prepareSitemap">
+            function <span class="apidocSignatureSpan">gulp-sitemap.sitemap.</span>prepareSitemap
+            <span class="apidocSignatureSpan">(entries, config)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sitemap.sitemap.processEntry">
+            function <span class="apidocSignatureSpan">gulp-sitemap.sitemap.</span>processEntry
+            <span class="apidocSignatureSpan">(entry, siteConfig)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-sitemap" id="apidoc.module.gulp-sitemap">module gulp-sitemap</a></h1>
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-sitemap.sitemap" id="apidoc.module.gulp-sitemap.sitemap">module gulp-sitemap.sitemap</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sitemap.sitemap.getEntryConfig" id="apidoc.element.gulp-sitemap.sitemap.getEntryConfig">
+        function <span class="apidocSignatureSpan">gulp-sitemap.sitemap.</span>getEntryConfig
+        <span class="apidocSignatureSpan">(file, siteConfig)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function getEntryConfig(file, siteConfig) {
+    var relativePath = file.relative;
+    var mappingsForFile = find(siteConfig.mappings, function(item) {
+        return multimatch(relativePath, item.pages).length &#x3e; 0;
+    }) || {};
+
+    var entry = defaults(
+        {},
+        pick(mappingsForFile, allowedProperties),
+        pick(siteConfig, allowedProperties)
+    );
+
+    if (entry.lastmod === null) {
+        // calculate mtime manually
+        entry.lastmod = file.stat &#x26;&#x26; file.stat.mtime || Date.now();
+    } else if (typeof entry.lastmod === &#x27;function&#x27;) {
+        entry.lastmod = entry.lastmod(file);
+    }
+
+    var indexRegex = /(\/|\\|^)index\.html?$/;
+    //turn index.html into -&#x3e; /
+    var relativeFile = relativePath.replace(indexRegex, function(string, match) {
+        return match.slice(0, 1) === &#x27;/&#x27; ? &#x27;/&#x27; : &#x27;&#x27;;
+    }, &#x27;i&#x27;);
+    //url location. Use slash to convert windows \\ or \ to /
+    var adjustedFile = slash(relativeFile);
+    entry.loc = siteConfig.siteUrl + adjustedFile;
+    entry.file = adjustedFile;
+
+    return entry;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+        return callback();
+    }
+
+    if (!firstFile) {
+        firstFile = file;
+    }
+
+    var entry = sitemap.<span class="apidocCodeKeywordSpan">getEntryConfig</span>(file, config);
+    entries.push(entry);
+    callback();
+},
+function (callback) {
+    if (!firstFile) {
+        return callback();
+    }
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sitemap.sitemap.isChangefreqValid" id="apidoc.element.gulp-sitemap.sitemap.isChangefreqValid">
+        function <span class="apidocSignatureSpan">gulp-sitemap.sitemap.</span>isChangefreqValid
+        <span class="apidocSignatureSpan">(changefreq)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function isChangefreqValid(changefreq) {
+    // empty changefreq is valid
+    if (!changefreq) {
+        return true;
+    }
+    return includes(validChangefreqs, changefreq.toLowerCase());
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sitemap.sitemap.prepareSitemap" id="apidoc.element.gulp-sitemap.sitemap.prepareSitemap">
+        function <span class="apidocSignatureSpan">gulp-sitemap.sitemap.</span>prepareSitemap
+        <span class="apidocSignatureSpan">(entries, config)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function prepareSitemap(entries, config) {
+    var entriesHref = entries.some(function(entry) {
+        return entry &#x26;&#x26; entry.hreflang &#x26;&#x26; entry.hreflang.length;
+    });
+    return (entriesHref ? headerHref : header)
+        .concat(entries.map(function(entry) {
+            return processEntry(entry, config);
+        }))
+        .concat(footer)
+        .join(config.newLine)
+        .toString();
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    entries.push(entry);
+    callback();
+},
+function (callback) {
+    if (!firstFile) {
+        return callback();
+    }
+    var contents = sitemap.<span class="apidocCodeKeywordSpan">prepareSitemap</span>(entries, config);
+    if (options.verbose) {
+        msg = &#x27;Files in sitemap: &#x27; + entries.length;
+        gutil.log(pluginName, msg);
+    }
+    //create and push new vinyl file for sitemap
+    this.push(new gutil.File({
+        cwd: firstFile.cwd,
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sitemap.sitemap.processEntry" id="apidoc.element.gulp-sitemap.sitemap.processEntry">
+        function <span class="apidocSignatureSpan">gulp-sitemap.sitemap.</span>processEntry
+        <span class="apidocSignatureSpan">(entry, siteConfig)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function processEntry(entry, siteConfig) {
+    var returnArr = [siteConfig.spacing + &#x27;&#x3c;url&#x3e;&#x27;];
+
+    var loc = entry.getLoc ? entry.getLoc(siteConfig.siteUrl, entry.loc, entry) : entry.loc;
+    returnArr.push(siteConfig.spacing + siteConfig.spacing + wrapTag(&#x27;loc&#x27;, loc));
+
+    var lastmod = entry.lastmod;
+    if (lastmod) {
+        //format mtime to ISO (same as +00:00)
+        lastmod = new Date(lastmod).toISOString();
+        returnArr.push(siteConfig.spacing + siteConfig.spacing + wrapTag(&#x27;lastmod&#x27;, lastmod));
+    }
+
+    var changefreq = entry.changefreq;
+    if (changefreq) {
+        returnArr.push(siteConfig.spacing + siteConfig.spacing + wrapTag(&#x27;changefreq&#x27;, changefreq));
+    }
+
+    var priority = entry.priority;
+    if (priority || priority === 0) {
+        returnArr.push(siteConfig.spacing + siteConfig.spacing + wrapTag(&#x27;priority&#x27;, priority));
+    }
+
+    var hreflang = entry.hreflang;
+    if (hreflang &#x26;&#x26; hreflang.length &#x3e; 0) {
+        var file = entry.file;
+        hreflang.forEach(function(item) {
+            var href = item.getHref(siteConfig.siteUrl, file, item.lang, loc);
+            var tag = &#x27;&#x3c;xhtml:link rel=&#x22;alternate&#x22; hreflang=&#x22;&#x27; + item.lang + &#x27;&#x22; href=&#x22;&#x27; + href + &#x27;&#x22; /&#x3e;&#x27;;
+            returnArr.push(siteConfig.spacing + siteConfig.spacing + tag);
+        });
+    }
+
+    returnArr.push(siteConfig.spacing + &#x27;&#x3c;/url&#x3e;&#x27;);
+    return returnArr.join(siteConfig.newLine);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
