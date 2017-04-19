@@ -63,6 +63,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-sitemap.gulp-sitemap">
+            function <span class="apidocSignatureSpan"></span>gulp-sitemap
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gulp-sitemap.</span>sitemap</span>
 
         </li>
@@ -113,6 +122,89 @@
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.gulp-sitemap" id="apidoc.module.gulp-sitemap">module gulp-sitemap</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-sitemap.gulp-sitemap" id="apidoc.element.gulp-sitemap.gulp-sitemap">
+        function <span class="apidocSignatureSpan"></span>gulp-sitemap
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">gulp-sitemap = function (options) {
+    var config = defaults(options || {}, {
+        changefreq: undefined,
+        fileName: &#x27;sitemap.xml&#x27;,
+        lastmod: null,
+        mappings: [],
+        newLine: gutil.linefeed,
+        priority: undefined,
+        spacing: &#x27;    &#x27;,
+        verbose: false
+    });
+    var entries = [];
+    var firstFile;
+    var msg;
+
+    if (!config.siteUrl) {
+        msg = &#x27;siteUrl is a required param&#x27;;
+        throw new gutil.PluginError(pluginName, msg);
+    }
+    if (options.changeFreq) {
+        msg = chalk.magenta(&#x27;changeFreq&#x27;) + &#x27; has been deprecated. Please use &#x27; + chalk.cyan(&#x27;changefreq&#x27;);
+        throw new gutil.PluginError(pluginName, msg);
+    }
+    // site url should have a trailing slash
+    if (config.siteUrl.slice(-1) !== &#x27;/&#x27;) {
+        config.siteUrl = config.siteUrl + &#x27;/&#x27;;
+    }
+
+    return through.obj(function (file, enc, callback) {
+            //we handle null files (that have no contents), but not dirs
+            if (file.isDirectory()) {
+                return callback(null, file);
+            }
+
+            if (file.isStream()) {
+                msg = &#x27;Streaming not supported&#x27;;
+                return callback(new gutil.PluginError(pluginName), msg);
+            }
+
+            //skip 404 file
+            if (/404\.html?$/i.test(file.relative)) {
+                return callback();
+            }
+
+            if (!firstFile) {
+                firstFile = file;
+            }
+
+            var entry = sitemap.getEntryConfig(file, config);
+            entries.push(entry);
+            callback();
+        },
+        function (callback) {
+            if (!firstFile) {
+                return callback();
+            }
+            var contents = sitemap.prepareSitemap(entries, config);
+            if (options.verbose) {
+                msg = &#x27;Files in sitemap: &#x27; + entries.length;
+                gutil.log(pluginName, msg);
+            }
+            //create and push new vinyl file for sitemap
+            this.push(new gutil.File({
+                cwd: firstFile.cwd,
+                base: firstFile.cwd,
+                path: path.join(firstFile.cwd, config.fileName),
+                contents: new Buffer(contents)
+            }));
+            callback();
+        });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 
 
