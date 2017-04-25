@@ -1,6 +1,6 @@
 # npmdoc-gulp-sitemap
 
-#### api documentation for  [gulp-sitemap (v4.2.0)](https://github.com/pgilad/gulp-sitemap#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-sitemap.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-sitemap) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-sitemap.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-sitemap)
+#### basic api documentation for  [gulp-sitemap (v4.2.0)](https://github.com/pgilad/gulp-sitemap#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-sitemap.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-sitemap) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-sitemap.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-sitemap)
 
 #### Generate a search engine friendly sitemap.xml using a Gulp stream
 
@@ -86,7 +86,8 @@
         "test": "mocha -R spec test/*.spec.js",
         "watchTest": "mocha -R spec --watch test/*.spec.js"
     },
-    "version": "4.2.0"
+    "version": "4.2.0",
+    "bin": {}
 }
 ```
 
